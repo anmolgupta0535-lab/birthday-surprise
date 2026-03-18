@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Traumiee ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Lock */
+#lock {
+  position: absolute;
+  width: 100%;
+  top: 40%;
+}
+
+/* Main */
+#main {
+  display: none;
+  transition: transform 0.6s ease;
+}
+
+/* Slide text */
+#slideHint {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  font-size: 14px;
+  opacity: 0.7;
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%,100%{opacity:0.7;}
+  50%{opacity:0.2;}
+}
+
+/* Letter Page */
+#letterPage {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 100%;
+  background: black;
+  transition: top 0.7s ease;
+}
+
+/* Envelope */
+.envelope {
+  width: 220px;
+  height: 140px;
+  background: #ff4d6d;
+  margin: auto;
+  margin-top: 120px;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.5s;
+}
+
+.envelope.open {
+  transform: scale(0.9);
+}
+
+/* flap */
+.envelope:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 110px solid transparent;
+  border-right: 110px solid transparent;
+  border-bottom: 70px solid #ff758f;
+  top: -70px;
+  left: 0;
+  transition: transform 0.6s;
+  transform-origin: bottom;
+}
+
+.envelope.open:before {
+  transform: rotateX(180deg);
+}
+
+/* Letter */
+.letter {
+  width: 80%;
+  max-width: 350px;
+  margin: auto;
+  background: white;
+  color: black;
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: -60px;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.7s ease;
+}
+
+.letter.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Typing */
+#typing {
+  min-height: 150px;
+}
+
+/* Image */
+img {
+  width: 100px;
+  border-radius: 50%;
+  margin-top: 100px;
+}
+
+/* Hearts */
+.heart {
+  position: fixed;
+  color: red;
+  animation: float 5s linear infinite;
+}
+@keyframes float {
+  from {transform: translateY(100vh);}
+  to {transform: translateY(-10vh);}
+}
+
+/* Canvas */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK -->
+<div id="lock">
+  <h2>Enter Password 🎁</h2>
+  <input type="password" id="pass">
+  <br><br>
+  <button onclick="check()">Unlock</button>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <canvas id="fireworks"></canvas>
+  <h1>✨ Happy Birthday TRAUMIEE GIRL🎂✨</h1>
+  <img id="photo" src="photo1.jpg">
+  <div id="slideHint">⬆️ Slide Up for Surprise</div>
+</div>
+
+<!-- LETTER PAGE -->
+<div id="letterPage">
+  <div class="envelope" id="env" onclick="openLetter()"></div>
+
+  <div class="letter" id="letterBox">
+    <p id="typing"></p>
+  </div>
+</div>
+
+<!-- MUSIC -->
+<audio id="music" loop>
+  <source src="song.mp3">
+</audio>
+
+<script>
+function check() {
+  let p = document.getElementById("pass").value;
+  if (p.toLowerCase() === "traumiee girl") {
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("main").style.display = "block";
+    startAll();
+  } else {
+    alert("Wrong password 😅");
+  }
+}
+
+function startAll() {
+  document.getElementById("music").play().catch(()=>{});
+  hearts();
+}
+
+/* SLIDE DETECT */
+let startY = 0;
+
+document.addEventListener("touchstart", e => {
+  startY = e.touches[0].clientY;
+});
+
+document.addEventListener("touchend", e => {
+  let endY = e.changedTouches[0].clientY;
+  
+  if (startY - endY > 80) {
+    openLetterPage();
+  }
+});
+
+function openLetterPage(){
+  document.getElementById("letterPage").style.top = "0";
+}
+
+/* MESSAGE */
+let text = `This day is very special to me—the day you messaged me on my birthday ❤️
+I never thought our bond would become this strong.
+I know I’ve made a few mistakes, but I hope you understood everything after we talked and cleared things up.
+
+Whenever I talk to you, I feel really good—like finally I found someone I truly vibe with.
+
+I wish you a very Happy Birthday 🎂✨
+Enjoy your day, stay happy, and may God always protect you from all devil 💫`;
+
+let i = 0;
+
+function openLetter(){
+  document.getElementById("env").classList.add("open");
+  document.getElementById("letterBox").classList.add("show");
+
+  document.getElementById("typing").innerHTML="";
+  i=0;
+  typeText();
+}
+
+function typeText(){
+  if(i<text.length){
+    let char=text.charAt(i);
+    document.getElementById("typing").innerHTML += (char=="\n")?"<br>":char;
+    i++;
+    setTimeout(typeText,25);
+  }
+}
+
+/* HEARTS */
+function hearts() {
+  setInterval(()=>{
+    let h = document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+  },500);
+}
+
+/* FIREWORKS */
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+function fire(){
+ let x=Math.random()*canvas.width;
+ let y=Math.random()*canvas.height/2;
+ for(let i=0;i<30;i++){
+  particles.push({x,y,dx:(Math.random()-0.5)*5,dy:(Math.random()-0.5)*5,life:100});
+ }
+}
+
+function anim(){
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ particles.forEach((p,i)=>{
+  p.x+=p.dx;
+  p.y+=p.dy;
+  p.life--;
+  ctx.fillStyle="white";
+  ctx.fillRect(p.x,p.y,2,2);
+  if(p.life<=0)particles.splice(i,1);
+ });
+ requestAnimationFrame(anim);
+}
+
+setInterval(fire,800);
+anim();
+</script>
+
+</body>
+</html>
